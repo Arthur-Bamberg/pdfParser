@@ -1,0 +1,14 @@
+{
+  "name": "pdfParser",
+  "type": "commonjs",
+  "version": "1.0.0",
+  "description": "A PDF parser in NodeJS to convert tables to CSV",
+  "main": "index.js",
+  "repository": "https://github.com/Arthur-Bamberg/pdfParser.git",
+  "author": "arthurbamberg <arthur.bamberg@diarioescola.com.br>",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "pdf-parse": "^1.1.1"
+  }
+}
