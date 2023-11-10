@@ -2,7 +2,8 @@
 
 const fs = require('fs');
 const path = require('path');
-const xlsxToCSV = require('./module');
+const xlsxToCSV = require('./xlsxToCSV/module');
+const mergeFiles = require('./xlsxToCSV/mergeFiles');
 
 function ensureFolderExists(folderPath) {
     try {
@@ -39,17 +40,23 @@ const foldersToSkip = ['Matrículas', 'Matrícula EJA', 'Ano Sala', 'Equipe', 'P
 
 const folders = getFoldersInDirectory(directoryPath, foldersToSkip);
 
-const outputFolder = './filesDone/csv';
+const outputFolder = './filesDone/responsiblePhoneNumber';
 ensureFolderExists(outputFolder);
 
 const excludeHeaders = ["Nome", "Sexo", "Ficha"];
 const separator = ";";
 
-for (const folder of folders) {
-    const realpath = `${directoryPath}/${folder}`;
-    xlsxToCSV(`${realpath}/${folder}.xlsx`, `${outputFolder}/${folder}.csv`, separator, excludeHeaders);
+async function convert() {
+    for (const folder of folders) {
+        const realpath = `${directoryPath}/${folder}`;
+        xlsxToCSV(`${realpath}/${folder}.xlsx`, `${outputFolder}/${folder}.csv`, separator, excludeHeaders);
+    }
+
+    // These two escape the pattern of folder name, xlsx name
+    xlsxToCSV(`${directoryPath}/P2A S1/Pré 2A S1.xlsx`, `${outputFolder}/PSA S1.csv`, separator, excludeHeaders);
+    xlsxToCSV(`${directoryPath}/P2B S1/Pré 2B S1.xlsx`, `${outputFolder}/PSB S1.csv`, separator, excludeHeaders);
 }
 
-// These two escape the pattern of folder name, xlsx name
-xlsxToCSV(`${directoryPath}/P2A S1/Pré 2A S1.xlsx`, `${outputFolder}/PSA S1.csv`, separator, excludeHeaders);
-xlsxToCSV(`${directoryPath}/P2B S1/Pré 2B S1.xlsx`, `${outputFolder}/PSB S1.csv`, separator, excludeHeaders);
+convert().then(() => {
+    mergeFiles(outputFolder, `${outputFolder}/_merged.csv`);
+});
