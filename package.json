@@ -6,9 +6,13 @@
   "main": "index.js",
   "repository": "https://github.com/Arthur-Bamberg/pdfParser.git",
   "author": "arthurbamberg <arthur.bamberg@diarioescola.com.br>",
+  "scripts": {
+    "xlsxToCSV": "node ./xlsxToCSV/xlsxToCSV.js"
+  },
   "license": "MIT",
   "private": false,
   "dependencies": {
+    "exceljs": "^4.4.0",
     "pdf-parse": "^1.1.1"
   }
 }
