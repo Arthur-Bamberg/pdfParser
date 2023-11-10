@@ -47,16 +47,19 @@ const excludeHeaders = ["Nome", "Sexo", "Ficha"];
 const separator = ";";
 
 async function convert() {
+    let promises = [];
     for (const folder of folders) {
         const realpath = `${directoryPath}/${folder}`;
-        xlsxToCSV(`${realpath}/${folder}.xlsx`, `${outputFolder}/${folder}.csv`, separator, excludeHeaders);
+        promises.push(xlsxToCSV(`${realpath}/${folder}.xlsx`, `${outputFolder}/${folder}.csv`, separator, excludeHeaders));
     }
 
     // These two escape the pattern of folder name, xlsx name
-    xlsxToCSV(`${directoryPath}/P2A S1/Pré 2A S1.xlsx`, `${outputFolder}/PSA S1.csv`, separator, excludeHeaders);
-    xlsxToCSV(`${directoryPath}/P2B S1/Pré 2B S1.xlsx`, `${outputFolder}/PSB S1.csv`, separator, excludeHeaders);
+    promises.push(xlsxToCSV(`${directoryPath}/P2A S1/Pré 2A S1.xlsx`, `${outputFolder}/PSA S1.csv`, separator, excludeHeaders));
+    promises.push(xlsxToCSV(`${directoryPath}/P2B S1/Pré 2B S1.xlsx`, `${outputFolder}/PSB S1.csv`, separator, excludeHeaders));
+
+    await Promise.all(promises);
 }
 
 convert().then(() => {
-    mergeFiles(outputFolder, `${outputFolder}/_merged.csv`);
+    mergeFiles(outputFolder, `${outputFolder}/responsiblePhoneNumber.csv`);
 });
