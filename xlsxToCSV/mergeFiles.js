@@ -3,34 +3,40 @@ const path = require('path');
 
 async function mergeCSVFiles(folderPath, outputFilePath) {
     try {
-        // Read the list of files in the folder
         const files = await fs.readdir(folderPath);
 
-        // Initialize an empty string to store concatenated content
-        let concatenatedContent = '';
+        let textArray;
+        let isFirstFile = true;
 
-        // Iterate through each file and read its content
-        let index = 0;
         for (const file of files) {
-            const filePath = path.join(folderPath, file);
+            const data = (await fs.readFile(`${folderPath}/${file}`, 'utf-8')).split('\n');
 
-            // Read the content of the file
-            let fileContent = await fs.readFile(filePath, 'utf-8');
-
-            if (index != 0) {
-                const lines = fileContent.split('\n');
-                lines.shift();
-                fileContent = lines.join('\n');
+            if (data[data.length - 1].trim() === '') {
+                data.pop();
             }
 
-            // Concatenate the content
-            concatenatedContent += fileContent;
-            index++;
+
+            if (isFirstFile) {
+                isFirstFile = false;
+
+                textArray = data;
+
+            } else {
+                data.shift();
+
+                textArray = [...textArray, ...data];
+            }
         }
 
-        fs.writeFile(outputFilePath, concatenatedContent);
+
+        const text = textArray.join('\n');
+
+        await fs.writeFile(outputFilePath, text);
+
+        console.log(`${outputFilePath} was successfully created and written!`);
+
     } catch (error) {
-        console.error('Error reading files:', error);
+        console.error('Error:', error);
     }
 }
 

@@ -43,7 +43,7 @@ const folders = getFoldersInDirectory(directoryPath, foldersToSkip);
 const outputFolder = './filesDone/responsiblePhoneNumber';
 ensureFolderExists(outputFolder);
 
-const excludeHeaders = ["Nome", "Sexo", "Ficha"];
+const excludeHeaders = ["Nome", "Sexo", "Ficha", "Idade"];
 const separator = ";";
 
 async function convert() {
